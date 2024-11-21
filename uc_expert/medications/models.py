@@ -12,8 +12,8 @@ class Medication(models.Model):
     FREQUENCY_CHOICES = [
         ('daily', 'Daily'),
         ('twice_daily', 'Twice Daily'),
-        ('three_times_daily', 'Three Times Daily'),  # Added
-        ('four_times_daily', 'Four Times Daily'),    # Added
+        ('three_times_daily', 'Three Times Daily'),  
+        ('four_times_daily', 'Four Times Daily'),    
         ('weekly', 'Weekly'),
         ('every_other_week', 'Every Other Week'),
         ('monthly', 'Monthly'),
@@ -21,7 +21,7 @@ class Medication(models.Model):
     ]
 
 
-    # Reorganize medication choices into groups
+   
     MEDICATION_CHOICES = [
         ('5-ASAs', (
             ('MESALAZINE_ORAL', 'Mesalazine (Oral)'),
@@ -76,9 +76,7 @@ class Medication(models.Model):
 class MedicationLog(models.Model):
     EFFECTIVENESS_CHOICES = [(i, str(i)) for i in range(1, 6)]
     
-    medication = models.ForeignKey(Medication, 
-                                 on_delete=models.CASCADE,
-                                 null=True)  # Make it nullable initially
+    medication = models.ForeignKey(Medication, on_delete=models.CASCADE, null=True)  
     taken_at = models.DateTimeField()
     taken_dosage = models.CharField(max_length=100)
     symptoms_at_time = models.TextField(blank=True)
@@ -95,18 +93,3 @@ class MedicationLog(models.Model):
     def __str__(self):
         return f"{self.medication} - {self.taken_at}" if self.medication else f"Log - {self.taken_at}"
 
-# Keep this temporarily for the migration
-class PatientMedication(models.Model):
-    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    medication = models.ForeignKey(Medication, on_delete=models.PROTECT)
-    dosage = models.CharField(max_length=100)
-    frequency = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
-    notes = models.TextField(blank=True)
-    
-    class Meta:
-        ordering = ['-start_date']
-    
-    def __str__(self):
-        return f"{self.patient.username} - {self.medication.name}"
