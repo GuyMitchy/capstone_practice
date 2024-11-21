@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'symptoms',
     'chat',
     'knowledge',
+    'medications',
 ]
 
 MIDDLEWARE = [

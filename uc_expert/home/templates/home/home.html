@@ -6,54 +6,63 @@
     <div class="mb-12">
         <p class="text-xl text-gray-600 mb-8">Track your symptoms - Log your medication - Become an expert patient</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Chat Card -->
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Chat with UC companion</h2>
-            <p class="text-gray-600 mb-4">Get answers to your UC-related questions</p>
-            <a href="{% url 'chat:list' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                Start Chat
-            </a>
-        </div>
-        
-        <!-- Symptoms Card -->
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Track Symptoms</h2>
-            <p class="text-gray-600 mb-4">Log and monitor your symptoms</p>
-            <a href="{% url 'symptoms:add' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                Log Symptom
-            </a>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Chat Card -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Chat with UC companion </h2>
+                <ul class="text-gray-600 mb-4">
+                    <li class="mb-1">- Get answers to your UC-related questions.</li>
+                    <li class="mb-1">- Talk about your symptoms and medications.</li>
+                    <li class="mb-3">- Become an expert on your condition.</li>
+                </ul>
+                <a href="{% url 'chat:list' %}" class=" mt-2 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    Start Chat
+                </a>
+            </div>
 
-        {% if recent_symptoms %}
-        <!-- Recent Symptoms -->
-        <div class="col-span-2 bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Recent Symptoms</h2>
-            <div class="space-y-4">
-                {% for symptom in recent_symptoms %}
-                <div class="border-b pb-4">
-                    <p class="font-semibold">{{ symptom.date|date:"M d, Y" }}</p>
-                    <p class="text-gray-600">Severity: {{ symptom.get_severity_display }}</p>
-                    <p class="text-gray-600">{{ symptom.description|truncatewords:30 }}</p>
-                </div>
-                {% endfor %}
+            <!-- Symptoms Card -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Symptom Tracker</h2>
+                <p class="text-gray-600 mb-4">Log and monitor your symptoms</p>
+                <a href="{% url 'symptoms:list' %}" class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                    Track Symptoms
+                </a>
+            </div>
+
+            <!-- Medications Card -->
+            <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Medication Log</h2>
+                <p class="text-gray-600 mb-4">Track your medication schedule</p>
+                <a href="{% url 'medications:list' %}" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                    Manage Medications
+                </a>
             </div>
         </div>
-        {% endif %}
-    </div>
     {% else %}
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to UC Expert</h1>
-        <p class="text-xl text-gray-600 mb-8">Your personal UC management companion</p>
-        <div class="space-x-4">
-            <a href="{% url 'account_login' %}" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-                Login
-            </a>
-            <a href="{% url 'account_signup' %}" class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
-                Sign Up
-            </a>
+        <div class="text-center">
+            <h1 class="text-4xl font-bold text-gray-900 mb-8">
+                Welcome to UC Expert
+            </h1>
+            
+            <p class="text-xl text-gray-600 mb-8">
+                Your personal Ulcerative Colitis management companion
+            </p>
+            
+            <div class="space-x-4">
+                <a href="{% url 'accounts:login' %}"
+                   class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    Login
+                </a>
+                <a href="{% url 'accounts:register' %}"
+                   class="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                    Register
+                </a>
+            {% endif %}
         </div>
     </div>
-    {% endif %}
+    
+    
+    
+   
 </div>
-{% endblock %}
+{% endblock %} 
