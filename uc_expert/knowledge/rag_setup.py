@@ -3,22 +3,22 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
-from typing import List, Dict
+from langchain.prompts import ChatPromptTemplate
 from langchain.schema import Document
+from typing import List
 import os
 
 class UCExpertRAG:
     def __init__(self):
-        self.model = "mistral"
         self.docs_path = os.path.join('knowledge', 'docs')
-        self.embeddings = OllamaEmbeddings(model="mistral")
+        self.embeddings = OpenAIEmbeddings()
+        self.llm = ChatOpenAI(model="gpt-4")
         self.vector_store = None
         
         # Search parameters
         self.fetch_k = 10
         self.final_k = 5
-        self.lambda_mult = 0.7  # Diversity parameter
+        self.lambda_mult = 0.7
         
         # Initialize vector store
         self.initialize_vector_store()
@@ -108,28 +108,11 @@ class UCExpertRAG:
             # Get diverse documents
             relevant_docs = self.get_diverse_documents(question)
             
-            print("\nRelevant documents found:")
-            seen_content = set()
-            unique_docs = []
-            
-            for i, doc in enumerate(relevant_docs, 1):
-                source = doc.metadata['source']
-                content_preview = doc.page_content[:100].replace('\n', ' ')
-                
-                # Hash the content to check for duplicates
-                content_hash = hash(doc.page_content)
-                
-                if content_hash not in seen_content:
-                    seen_content.add(content_hash)
-                    unique_docs.append(doc)
-                    print(f"Doc {i}: {source}")
-                    print(f"Content: {content_preview}...")
-            
-            if not unique_docs:
+            if not relevant_docs:
                 return "I'm sorry, I don't have enough information to answer that question."
                 
-            # Combine unique contexts
-            context = "\n\n".join([doc.page_content for doc in unique_docs])
+            # Combine contexts
+            context = "\n\n".join([doc.page_content for doc in relevant_docs])
             
             # Format prompt and get response
             formatted_prompt = self.prompt.format(
@@ -138,53 +121,10 @@ class UCExpertRAG:
                 question=question
             )
 
-            response = ollama.chat(model=self.model, messages=[{
-                'role': 'user',
-                'content': formatted_prompt
-            }])
-
-            return ' '.join(response['message']['content'].split())
+            # Use ChatOpenAI instead of Ollama
+            response = self.llm.predict(formatted_prompt)
+            return ' '.join(response.split())
 
         except Exception as e:
             print(f"Error in get_response: {str(e)}")
             return "I apologize, but I'm having trouble accessing my knowledge base."
-
-class UCExpertRAG:
-    def __init__(self):
-        self.embeddings = OpenAIEmbeddings()  # Changed from OllamaEmbeddings
-        self.vector_store = None
-        self.qa_chain = None
-        
-    def initialize_knowledge_base(self):
-        loader = DirectoryLoader('knowledge/docs/', glob="*.md")
-        documents = loader.load()
-        
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200
-        )
-        splits = text_splitter.split_documents(documents)
-        
-        self.vector_store = Chroma.from_documents(
-            documents=splits,
-            embedding=self.embeddings,
-            persist_directory="knowledge/db"
-        )
-        
-        llm = ChatOpenAI(model="gpt-4")  # Changed from Ollama
-        self.qa_chain = RetrievalQA.from_chain_type(
-            llm=llm,
-            chain_type="stuff",
-            retriever=self.vector_store.as_retriever()
-        )
-        
-    def get_response(self, question, context=""):
-        if not self.qa_chain:
-            self.initialize_knowledge_base()
-            
-        prompt = f"""
-        Context: {context}
-        Question: {question}
-        Please provide accurate medical information based on the context and question.
-        """
-        return self.qa_chain.run(prompt)
