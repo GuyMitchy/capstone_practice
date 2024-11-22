@@ -14,7 +14,7 @@ class Conversation(models.Model):
         ordering = ['-updated_at']
 
     def __str__(self):
-        return f"Conversation {self.id} - {self.user.username}"
+        return f"Conversation {self.title} - {self.user.username}"
 
     def get_absolute_url(self):
         return reverse('chat:detail', kwargs={'pk': self.pk})

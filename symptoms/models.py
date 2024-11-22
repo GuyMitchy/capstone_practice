@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import date
 
-def validate_past_date(value):
+def validate_past_date(value): # This gets used in the model as (validators=validate_past_date)
     if value > date.today():
         raise ValidationError('Date cannot be in the future.')
 

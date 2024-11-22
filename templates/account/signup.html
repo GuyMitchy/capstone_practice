@@ -79,23 +79,14 @@
                     <label for="id_password2" class="sr-only">{% trans "Password (again)" %}</label>
                     <input id="id_password2" name="password2" type="password" required
                            class="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                           placeholder="{% trans 'Password (again)' %}">
+                           placeholder="{% trans 'Confirm Password' %}">
                     {% if form.password2.errors %}
                         <p class="text-red-500 text-xs mt-1">{{ form.password2.errors.0 }}</p>
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Password Help Text -->
-            <div class="text-xs text-gray-500 mt-2">
-                {% if form.password1.help_text %}
-                    <ul class="list-disc list-inside space-y-1">
-                        {% for help_text in form.password1.help_text.split('\n') %}
-                            <li>{{ help_text }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
+           
 
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

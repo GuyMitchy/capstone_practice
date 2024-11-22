@@ -95,6 +95,19 @@ def send_message(request, conversation_id):
                     user_context += f"- Started {med.start_date.strftime('%Y-%m-%d')}: {med.get_name_display()} ({med.dosage}, {med.get_frequency_display()}, {med.notes})\n"
         except AttributeError:
             user_context += "\nNo medications recorded.\n"
+            
+        # Try to get recent food entries if they exist
+        try:
+            recent_foods = request.user.food_set.all()[:5]  # Get 5 most recent entries
+            if recent_foods:
+                user_context += "\nRecent Food Entries:\n"
+                for food in recent_foods:
+                    user_context += f"- {food.eaten_at.strftime('%Y-%m-%d %H:%M')}: {food.get_meal_type_display()} - {food.food_name} ({food.portion_size})"
+                    if food.notes:
+                        user_context += f" Notes: {food.notes}"
+                    user_context += "\n"
+        except AttributeError:
+            user_context += "\nNo food entries recorded.\n"
 
         # Get response using RAG system
         response = rag_system.get_response(

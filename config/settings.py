@@ -33,6 +33,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["8000-guymitchy-capstonepract-7912tbi7ced.ws.codeinstitute-ide.net",'.herokuapp.com']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.codeinstitute-ide.net/",
+    "https://*.herokuapp.com"
+]
 
 # Application definition
 
@@ -55,6 +59,7 @@ INSTALLED_APPS = [
     'chat',
     'knowledge',
     'medications',
+    'food',
 ]
 
 MIDDLEWARE = [
@@ -104,10 +109,7 @@ DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.codeinstitute-ide.net/",
-    "https://*.herokuapp.com"
-]
+
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 

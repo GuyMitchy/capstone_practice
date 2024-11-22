@@ -21,7 +21,7 @@ class Medication(models.Model):
     ]
 
 
-   
+
     MEDICATION_CHOICES = [
         ('5-ASAs', (
             ('MESALAZINE_ORAL', 'Mesalazine (Oral)'),
@@ -73,23 +73,4 @@ class Medication(models.Model):
     class Meta:
         ordering = ['-active', '-start_date']
 
-class MedicationLog(models.Model):
-    EFFECTIVENESS_CHOICES = [(i, str(i)) for i in range(1, 6)]
-    
-    medication = models.ForeignKey(Medication, on_delete=models.CASCADE, null=True)  
-    taken_at = models.DateTimeField()
-    taken_dosage = models.CharField(max_length=100)
-    symptoms_at_time = models.TextField(blank=True)
-    effectiveness_rating = models.IntegerField(
-        choices=EFFECTIVENESS_CHOICES,
-        null=True,
-        blank=True
-    )
-    side_effects_noted = models.TextField(blank=True)
-    
-    class Meta:
-        ordering = ['-taken_at']
-    
-    def __str__(self):
-        return f"{self.medication} - {self.taken_at}" if self.medication else f"Log - {self.taken_at}"
 
