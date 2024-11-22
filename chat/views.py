@@ -92,7 +92,7 @@ def send_message(request, conversation_id):
             if active_medications:
                 user_context += "\nCurrent Medications:\n"
                 for med in active_medications:
-                    user_context += f"- Started {med.start_date.strftime('%Y-%m-%d')}: {med.get_name_display()} ({med.dosage}, {med.get_frequency_display()})\n"
+                    user_context += f"- Started {med.start_date.strftime('%Y-%m-%d')}: {med.get_name_display()} ({med.dosage}, {med.get_frequency_display()}, {med.notes})\n"
         except AttributeError:
             user_context += "\nNo medications recorded.\n"
 
